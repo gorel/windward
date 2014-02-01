@@ -84,63 +84,22 @@
       <file leaf-file-name="MyPlayerBrain.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/MyPlayerBrain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="576" column="90" selection-start="22059" selection-end="22059" vertical-scroll-proportion="-5.079114" vertical-offset="12594" max-vertical-offset="13226">
+            <state line="513" column="49" selection-start="20240" selection-end="20240" vertical-scroll-proportion="-0.34018987" vertical-offset="8528" max-vertical-offset="13175">
               <folding>
-                <element signature="e#0#30695#0" expanded="true" />
+                <element signature="e#0#31775#0" expanded="true" />
                 <element signature="imports" expanded="true" />
                 <element signature="e#4136#4137#0" expanded="true" />
                 <element signature="e#4171#4172#0" expanded="true" />
                 <element signature="e#4235#4236#0" expanded="true" />
                 <element signature="e#4271#4272#0" expanded="true" />
                 <element signature="e#7415#7426#0" expanded="true" />
-                <element signature="e#16410#16418#0" expanded="true" />
-                <element signature="e#28145#28445#0" expanded="true" />
-                <element signature="e#28434#28435#0" expanded="true" />
-                <element signature="e#28679#28690#0" expanded="true" />
-                <element signature="e#29071#30662#0" expanded="true" />
-                <element signature="e#30657#30658#0" expanded="true" />
+                <element signature="e#17398#17406#0" expanded="true" />
+                <element signature="e#29201#29501#0" expanded="true" />
+                <element signature="e#29490#29491#0" expanded="true" />
+                <element signature="e#29735#29746#0" expanded="true" />
+                <element signature="e#30127#31742#0" expanded="true" />
+                <element signature="e#31737#31738#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PowerUp.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/PowerUp.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="175" column="13" selection-start="5521" selection-end="5521" vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="3961">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Passenger.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Passenger.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="19" selection-start="2402" selection-end="2409" vertical-scroll-proportion="-8.269231" vertical-offset="975" max-vertical-offset="4641">
-              <folding>
-                <element signature="e#1855#1856#0" expanded="true" />
-                <element signature="e#1900#1901#0" expanded="true" />
-                <element signature="e#2461#2462#0" expanded="true" />
-                <element signature="e#2496#2497#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Company.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="13" selection-start="524" selection-end="524" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="986">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Player.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Player.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="179" column="0" selection-start="5878" selection-end="5878" vertical-scroll-proportion="-8.153846" vertical-offset="2185" max-vertical-offset="3519">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -173,7 +132,6 @@
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis/api/MapSquare.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/FifoByteBuffer.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Limo.java" />
-        <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/TcpClient.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/PlayerAIBase.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Passenger.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java" />
@@ -186,6 +144,7 @@
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/Framework.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/SimpleAStar.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Player.java" />
+        <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/TcpClient.java" />
         <option value="$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/MyPlayerBrain.java" />
       </list>
     </option>
@@ -353,7 +312,7 @@
     <configuration default="false" name="Framework" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="net.windward.Windwardopolis2.Framework" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="k9-00.cs.purdue.edu" />
+      <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -554,7 +513,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -573,7 +532,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12552084" sideWeight="0.5451937" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2663158" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2663158" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -612,19 +571,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9061">
           <folding>
-            <element signature="e#0#30695#0" expanded="true" />
+            <element signature="e#0#31775#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#4136#4137#0" expanded="true" />
             <element signature="e#4171#4172#0" expanded="true" />
             <element signature="e#4235#4236#0" expanded="true" />
             <element signature="e#4271#4272#0" expanded="true" />
             <element signature="e#7415#7426#0" expanded="true" />
-            <element signature="e#16410#16418#0" expanded="true" />
-            <element signature="e#28145#28445#0" expanded="true" />
-            <element signature="e#28434#28435#0" expanded="true" />
-            <element signature="e#28679#28690#0" expanded="true" />
-            <element signature="e#29071#30662#0" expanded="true" />
-            <element signature="e#30657#30658#0" expanded="true" />
+            <element signature="e#17398#17406#0" expanded="true" />
+            <element signature="e#29201#29501#0" expanded="true" />
+            <element signature="e#29490#29491#0" expanded="true" />
+            <element signature="e#29735#29746#0" expanded="true" />
+            <element signature="e#30127#31742#0" expanded="true" />
+            <element signature="e#31737#31738#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -640,7 +599,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="108" column="0" selection-start="3900" selection-end="3900" vertical-scroll-proportion="0.0" vertical-offset="1836" max-vertical-offset="7565">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -656,19 +615,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="309" column="26" selection-start="11014" selection-end="11014" vertical-scroll-proportion="0.0" vertical-offset="5253" max-vertical-offset="8908">
           <folding>
-            <element signature="e#0#30695#0" expanded="true" />
+            <element signature="e#0#31775#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#4136#4137#0" expanded="true" />
             <element signature="e#4171#4172#0" expanded="true" />
             <element signature="e#4235#4236#0" expanded="true" />
             <element signature="e#4271#4272#0" expanded="true" />
             <element signature="e#7415#7426#0" expanded="true" />
-            <element signature="e#16410#16418#0" expanded="true" />
-            <element signature="e#28145#28445#0" expanded="true" />
-            <element signature="e#28434#28435#0" expanded="true" />
-            <element signature="e#28679#28690#0" expanded="true" />
-            <element signature="e#29071#30662#0" expanded="true" />
-            <element signature="e#30657#30658#0" expanded="true" />
+            <element signature="e#17398#17406#0" expanded="true" />
+            <element signature="e#29201#29501#0" expanded="true" />
+            <element signature="e#29490#29491#0" expanded="true" />
+            <element signature="e#29735#29746#0" expanded="true" />
+            <element signature="e#30127#31742#0" expanded="true" />
+            <element signature="e#31737#31738#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -682,7 +641,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/FifoByteBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1887" />
+        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1887">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/PowerUp.java">
@@ -734,14 +695,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/FifoByteBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1887" />
+        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1887">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/Framework.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="323" column="42" selection-start="13438" selection-end="13438" vertical-scroll-proportion="0.0" vertical-offset="4908" max-vertical-offset="7633">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -771,19 +734,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="213" column="34" selection-start="7497" selection-end="7497" vertical-scroll-proportion="0.0" vertical-offset="3621" max-vertical-offset="4607">
           <folding>
-            <element signature="e#0#30695#0" expanded="true" />
+            <element signature="e#0#31775#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#4136#4137#0" expanded="true" />
             <element signature="e#4171#4172#0" expanded="true" />
             <element signature="e#4235#4236#0" expanded="true" />
             <element signature="e#4271#4272#0" expanded="true" />
             <element signature="e#7415#7426#0" expanded="true" />
-            <element signature="e#16410#16418#0" expanded="true" />
-            <element signature="e#28145#28445#0" expanded="true" />
-            <element signature="e#28434#28435#0" expanded="true" />
-            <element signature="e#28679#28690#0" expanded="true" />
-            <element signature="e#29071#30662#0" expanded="true" />
-            <element signature="e#30657#30658#0" expanded="true" />
+            <element signature="e#17398#17406#0" expanded="true" />
+            <element signature="e#29201#29501#0" expanded="true" />
+            <element signature="e#29490#29491#0" expanded="true" />
+            <element signature="e#29735#29746#0" expanded="true" />
+            <element signature="e#30127#31742#0" expanded="true" />
+            <element signature="e#31737#31738#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -797,7 +760,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="19" selection-start="351" selection-end="351" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="5202">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -845,7 +808,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/FifoByteBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887" />
+        <state line="12" column="11" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/MapSquare.java">
@@ -875,26 +840,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/TcpClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="68" selection-start="1264" selection-end="1264" vertical-scroll-proportion="0.0" vertical-offset="251" max-vertical-offset="3043">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/SimpleAStar.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="179" column="60" selection-start="8280" selection-end="8280" vertical-scroll-proportion="0.0" vertical-offset="2670" max-vertical-offset="6494">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/Framework.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="108" column="0" selection-start="3900" selection-end="3900" vertical-scroll-proportion="0.0" vertical-offset="1836" max-vertical-offset="7565">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -919,13 +868,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="13" selection-start="524" selection-end="524" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="986">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Passenger.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="84" column="19" selection-start="2402" selection-end="2409" vertical-scroll-proportion="-8.269231" vertical-offset="975" max-vertical-offset="4641">
@@ -945,23 +887,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/TcpClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="38" selection-start="3997" selection-end="3999" vertical-scroll-proportion="-8.269231" vertical-offset="2046" max-vertical-offset="3043">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="33" selection-start="884" selection-end="922" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="986">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/Framework.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="180" column="22" selection-start="7850" selection-end="7853" vertical-scroll-proportion="0.33333334" vertical-offset="2505" max-vertical-offset="7344">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/MyPlayerBrain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="576" column="90" selection-start="22059" selection-end="22059" vertical-scroll-proportion="-5.079114" vertical-offset="12594" max-vertical-offset="13226">
+        <state line="513" column="49" selection-start="20240" selection-end="20240" vertical-scroll-proportion="-0.34018987" vertical-offset="8528" max-vertical-offset="13175">
           <folding>
-            <element signature="e#0#30695#0" expanded="true" />
+            <element signature="e#0#31775#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#4136#4137#0" expanded="true" />
             <element signature="e#4171#4172#0" expanded="true" />
             <element signature="e#4235#4236#0" expanded="true" />
             <element signature="e#4271#4272#0" expanded="true" />
             <element signature="e#7415#7426#0" expanded="true" />
-            <element signature="e#16410#16418#0" expanded="true" />
-            <element signature="e#28145#28445#0" expanded="true" />
-            <element signature="e#28434#28435#0" expanded="true" />
-            <element signature="e#28679#28690#0" expanded="true" />
-            <element signature="e#29071#30662#0" expanded="true" />
-            <element signature="e#30657#30658#0" expanded="true" />
+            <element signature="e#17398#17406#0" expanded="true" />
+            <element signature="e#29201#29501#0" expanded="true" />
+            <element signature="e#29490#29491#0" expanded="true" />
+            <element signature="e#29735#29746#0" expanded="true" />
+            <element signature="e#30127#31742#0" expanded="true" />
+            <element signature="e#31737#31738#0" expanded="true" />
           </folding>
         </state>
       </provider>

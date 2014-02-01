@@ -249,7 +249,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     pickup = AllPickups(this, getMe(), getPassengers());
                     privateMyTargetPassenger = pickup.get(0);
                     ptDest = getMyTargetPassenger().getLobby().getBusStop();
-                    System.out.println("Enemy detected at " + getMyPassenger().getDestination() + ".  Rerouting.");
+                    System.out.println("DESTINATION CHANGED: Enemy detected at " + getMyPassenger().getDestination().getName() + ".  Rerouting to " + getMyTargetPassenger().getLobby().getName() + ".");
                     DisplayOrders(ptDest);
 
                     // get the path from where we are to the dest.
@@ -301,38 +301,40 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 case PASSENGER_NO_ACTION:
                     if (getMe().getLimo().getPassenger() == null) {
                         pickup = AllPickups(this, plyrStatus, getPassengers());
-                        privateMyTargetPassenger = pickup.get(0);
-                        ptDest = getMyTargetPassenger().getLobby().getBusStop();
+
+                        if (getMyTargetPassenger() != null && !getMyTargetPassenger().equals(pickup.get(0)))
+                            System.out.println("Target passenger picked up by someone else.  Rerouting.");
+
+                        privateMyTargetPassenger = getMyPassenger() == null ? pickup.get(0) : getMyPassenger();
+                        ptDest = getMyPassenger() == null ? getMyTargetPassenger().getLobby().getBusStop() : getMyPassenger().getDestination().getBusStop();
+                        System.out.println("DESTINATION CHANGED: Getting next passenger. Passenger: " + getMyTargetPassenger().getName());
                     } else {
                         ptDest = getMe().getLimo().getPassenger().getDestination().getBusStop();
                     }
                     break;
                 case PASSENGER_DELIVERED:
+                    pickup = AllPickups(this, getMe(), getPassengers());
+                    ptDest = pickup.get(0).getLobby().getBusStop();
+                    System.out.println("DESTINATION CHANGED: Getting next passenger (last passenger delivered).");
+                    break;
                 case PASSENGER_ABANDONED:
                     pickup = AllPickups(this, getMe(), getPassengers());
                     ptDest = pickup.get(0).getLobby().getBusStop();
+                    System.out.println("DESTINATION CHANGED: Getting next passenger (last passenger abandoned).");
                     break;
                 case PASSENGER_REFUSED_ENEMY:
                     //Get a new list of pickups and pretend we don't have a passenger
 					pickup = AllPickups(this, getMe(), getPassengers());
-                    ptDest = pickup.get(0).getLobby().getBusStop();
-					
-					/* Their code
-                    java.util.List<Company> comps = getCompanies();
-                    while(ptDest == null) {
-                        int randCompany = rand.nextInt(comps.size());
-                        if (comps.get(randCompany) != getMe().getLimo().getPassenger().getDestination()) {
-                            ptDest = comps.get(randCompany).getBusStop();
-                            break;
-                        }
-                    }
-					*/
-                    break;
+                    privateMyTargetPassenger = pickup.get(0);
+                    ptDest = getMyTargetPassenger().getLobby().getBusStop();
+                    System.out.println("DESTINATION CHANGED: Getting next passenger (passenger refused: enemy).");
+					break;
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_PICKED_UP:
                     pickup = AllPickups(this, getMe(), getPassengers());
-                    privateMyTargetPassenger = pickup.get(0);
-                    ptDest = getMyTargetPassenger().getLobby().getBusStop();
+                    privateMyTargetPassenger = getMyPassenger() == null ? pickup.get(0) : getMyPassenger();
+                    ptDest = getMyPassenger() != null ? getMyPassenger().getDestination().getBusStop() : getMyTargetPassenger().getLobby().getBusStop();
+                    System.out.println("DESTINATION CHANGED: Picked up " + getMyPassenger().getName() + " at " + getNameOfBusStop() + " (Destination: " + getMyPassenger().getDestination().getName() + ")");
                     break;
 
             }
@@ -349,7 +351,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     if (getMe().getLimo().getCoffeeServings() < 1 && getMyPassenger() == null)
                     {
                         ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
-                        System.out.println("Setting location to a coffee place");
+                        System.out.println("DESTINATION CHANGED: Getting coffee.");
                     }
                     break;
                 case COFFEE_STORE_CAR_RESTOCKED:
@@ -364,7 +366,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if (getMe().getLimo().getCoffeeServings() < 1)
             {
                 ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
-                System.out.println("Setting location to a coffee place");
+                System.out.println("DESTINATION CHANGED: Just got coffee.");
             }
 
             // may be another status
@@ -462,21 +464,14 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             //Discard this crap
             if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERY_QUARTER_SPEED)
             {
-                playCards.invoke(PlayerAIBase.CARD_ACTION.DISCARD, pu2);
-                privatePowerUpHand.remove(pu2);
-            }
-            else if (numCoffees > 1 && pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
-            {
-                Passenger toUseCardOn = null;
-                for(Passenger pass : privatePassengers)
+                Point current = getMe().getLimo().getMapPosition();
+                Point dest = getMyPassenger().getDestination().getBusStop();
+                int dist = getDistTo(current, dest);
+                if (dist < 12 || getMyPassenger().getPointsDelivered() >= 2 && dist < 18)
                 {
-                    if(pass.getCar() == null)
-                    {
-                        toUseCardOn = pass;
-                        break;
-                    }
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"We'll take it easy\"");
                 }
-                pu2.setPassenger(toUseCardOn);
             }
             else if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
             {
@@ -489,7 +484,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 if (target.getLimo().getPassenger() != null)
                     dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
 
-                if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION && dist > 3 && dist < 8)
+                if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION && dist > 3 && dist < 10)
                 {
                     pu2.setPlayer(target);
                     shouldPlay = true;
@@ -516,7 +511,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 if (target.getLimo().getPassenger() != null)
                     dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
 
-                if (getDistTo(current, dest) > 20 || rand.nextDouble() < 0.3)
+                if (getDistTo(current, dest) > 18 || rand.nextDouble() < 0.3)
                 {
                     shouldPlay = true;
                     System.out.println("NOTE: Playing card.  Strategy: \"Maybe we'll be closer\"");
@@ -532,15 +527,15 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 if (getMyTargetPassenger().equals(pu2.getPassenger()))
                 {
                     shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Hey, you're that dude\"");
+                    System.out.println("NOTE: Playing card.  Strategy: \"Hey, you're that dude\" -- CEO is " + pu2.getPassenger());
                 }
             }
             else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVER_AT_COMPANY)
             {
-                if (getMyTargetPassenger().getDestination().equals(pu2.getCompany()))
+                if (numCoffees > 1 && getMyTargetPassenger().getDestination().equals(pu2.getCompany()))
                 {
                     shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"I like that place\"");
+                    System.out.println("NOTE: Playing card.  Strategy: \"I like that place\" -- Destination is " + pu2.getCompany().getName());
                 }
             }
             else if (pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
@@ -596,7 +591,6 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if (shouldPlay)
             {
                 playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, pu2);
-                System.out.println("NOTE: Playing card " + pu2.getName());
                 privatePowerUpHand.remove(pu2);
             }
         }
@@ -632,16 +626,14 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             case PASSENGER_REFUSED_ENEMY:
                 msg = plyrStatus.getLimo().getPassenger().getName() + " refused to exit at " +
                         plyrStatus.getLimo().getPassenger().getDestination().getName() + " - enemy there";
-                if (!checkForEnemy())
-                    System.out.println("******************NO CLUE WHY THIS DOESN'T WORK! :)");
                 break;
             case PASSENGER_DELIVERED_AND_PICKED_UP:
                 msg = getMyPassenger().getName() + " delivered at " + getMyPassenger().getLobby().getName() + " and " +
-                        plyrStatus.getLimo().getPassenger().getName() + " picked up (Destination: " + plyrStatus.getLimo().getPassenger().getDestination() + ")";
+                        plyrStatus.getLimo().getPassenger().getName() + " picked up at " + getMyPassenger().getLobby().getName() + " (Destination: " + plyrStatus.getLimo().getPassenger().getDestination().getName() + ")";
                 privateMyPassenger = plyrStatus.getLimo().getPassenger();
                 break;
             case PASSENGER_PICKED_UP:
-                msg = plyrStatus.getLimo().getPassenger().getName() + " picked up (Destination: " + plyrStatus.getLimo().getPassenger().getDestination() + ")";
+                msg = plyrStatus.getLimo().getPassenger().getName() + " picked up at " + getNameOfBusStop() + " (Destination: " + plyrStatus.getLimo().getPassenger().getDestination().getName() + ")";
                 privateMyPassenger = plyrStatus.getLimo().getPassenger();
                 break;
             case PASSENGER_REFUSED_NO_COFFEE:
@@ -675,7 +667,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         }
 
         if (store != null)
-            msg = "Heading toward " + store.getName() + " at " + ptDest.toString();
+            msg = "Heading toward " + store.getName();
         else
         {
             Company company = null;
@@ -687,7 +679,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             }
 
             if (company != null)
-                msg = "Heading toward " + company.getName() + " at " + ptDest.toString();
+                msg = "Heading toward " + company.getName();
         }
         if (msg != null && !msg.equals(""))
         {
@@ -722,6 +714,14 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         return false;
     }
 
+    private String getNameOfBusStop()
+    {
+        for (Company c : getCompanies())
+            if (c.getBusStop().equals(getMe().getLimo().getMapPosition()))
+                return c.getName();
+        return "Uh oh Spaghetti-O's.  I don't know! :(";
+    }
+
     private static ArrayList<CoffeeStore> GetCoffeeQueue(final MyPlayerBrain ai, ArrayList<CoffeeStore> stores)
     {
         Collections.sort(stores, new Comparator<CoffeeStore>()
@@ -751,30 +751,27 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 				boolean p2HasEnemy = false;
 				
 				//If the passenger has an enemy at their destination, do not take them
-				for (Passenger enemy : p1.getEnemies())
-                {
-                    Company eLoc = enemy.getLobby();
-					if (eLoc != null && eLoc.getBusStop().equals(p1.getDestination().getBusStop()))
-					{
-						p1HasEnemy = true;
-						break;
-					}
-                }
-				
-				for (Passenger enemy : p2.getEnemies())
-                {
-                    Company eLoc = enemy.getLobby();
-					if (eLoc != null && eLoc.getBusStop().equals(p2.getDestination().getBusStop()))
-					{
-						p2HasEnemy = true;
-						break;
-					}
-                }
+
+                for (Passenger p : p1.getDestination().getPassengers())
+                    if (p1.getEnemies().contains(p))
+                    {
+                        p1HasEnemy = true;
+                        break;
+                    }
+
+                for (Passenger p : p2.getDestination().getPassengers())
+                    if (p2.getEnemies().contains(p))
+                    {
+                        p2HasEnemy = true;
+                        break;
+                    }
 				
 				if (p1HasEnemy && !p2HasEnemy)
 					return 1;
 				else if (p2HasEnemy && !p1HasEnemy)
 					return -1;
+                else if (p1HasEnemy && p2HasEnemy)
+                    return 0;
 				
 				//If the passenger is right here, go ahead and take them
 				int dist2p1 = ai.getDistTo(ai.getMe().getLimo().getMapPosition(), p1.getLobby().getBusStop());
