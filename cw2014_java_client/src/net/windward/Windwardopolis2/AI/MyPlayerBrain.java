@@ -227,17 +227,18 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
      * @param status     The status message.
      * @param plyrStatus The player this status is about. THIS MAY NOT BE YOU.
      */
-    public final void GameStatus(PlayerAIBase.STATUS status, Player plyrStatus) {
+    public final void GameStatus(PlayerAIBase.STATUS status, Player plyrStatus)
+    {
 
-        // bugbug - Framework.cs updates the object's in this object's Players, Passengers, and Companies lists. This works fine as long
-        // as this app is single threaded. However, if you create worker thread(s) or respond to multiple status messages simultaneously
-        // then you need to split these out and synchronize access to the saved list objects.
-
-        try {
-            // bugbug - we return if not us because the below code is only for when we need a new path or our limo hit a bus stop.
-            // if you want to act on other players arriving at bus stops, you need to remove this. But make sure you use Me, not
-            // plyrStatus for the Player you are updating (particularly to determine what tile to start your path from).
-            if (plyrStatus != getMe()) {
+        try
+        {
+            if (plyrStatus != getMe())
+            {
+                //If there is an enemy at our destination, abandon this passenger
+                if (checkForEnemy())
+                {
+                    
+                }
                 return;
             }
 
@@ -291,7 +292,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     break;
 
             }
-
+            /* I don' think we need this probably...
             // coffee store override
             switch (status)
             {
@@ -316,6 +317,14 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                         break;
                     ptDest = pickup.get(0).getLobby().getBusStop();
                     break;
+            }
+            */
+
+            //If we're out of coffee and don't have a passenger, go get coffee from the nearest store
+            if (getMe().getLimo().getCoffeeServings() < 1 && getMyPassenger() == null)
+            {
+                ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
+                System.out.println("Setting location to a coffee place");
             }
 
             // may be another status
@@ -518,6 +527,26 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         return SimpleAStar.CalculatePath(getGameMap(), p1, p2).size();
     }
 
+    private boolean checkForEnemy()
+    {
+        for (Passenger enemy : getMyPassenger().getEnemies())
+            if (enemy.getLobby() != null && enemy.getLobby().getBusStop().equals(getMyPassenger().getDestination()))
+                return true;
+        return false;
+    }
+
+    private static ArrayList<CoffeeStore> GetCoffeeQueue(final MyPlayerBrain ai, ArrayList<CoffeeStore> stores)
+    {
+        Collections.sort(stores, new Comparator<CoffeeStore>()
+        {
+           public int compare(CoffeeStore c1, CoffeeStore c2)
+           {
+               return ai.getDistTo(ai.getMe().getLimo().getMapPosition(), c1.getBusStop()) - ai.getDistTo(ai.getMe().getLimo().getMapPosition(), c2.getBusStop());
+           }
+        });
+        return stores;
+    }
+
     private static java.util.ArrayList<Passenger> AllPickups(final MyPlayerBrain ai, Player me, Iterable<Passenger> passengers) {
         java.util.ArrayList<Passenger> pickup = new java.util.ArrayList<Passenger>();
 
@@ -536,18 +565,24 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 				
 				//If the passenger has an enemy at their destination, do not take them
 				for (Passenger enemy : p1.getEnemies())
-					if (enemy.getLobby().getBusStop().equals(p1.getDestination().getBusStop()))
+                {
+                    Company eLoc = enemy.getLobby();
+					if (eLoc != null && eLoc.getBusStop().equals(p1.getDestination().getBusStop()))
 					{
 						p1HasEnemy = true;
 						break;
 					}
+                }
 				
 				for (Passenger enemy : p2.getEnemies())
-					if (enemy.getLobby().getBusStop().equals(p2.getDestination().getBusStop()))
+                {
+                    Company eLoc = enemy.getLobby();
+					if (eLoc != null && eLoc.getBusStop().equals(p2.getDestination().getBusStop()))
 					{
 						p2HasEnemy = true;
 						break;
 					}
+                }
 				
 				if (p1HasEnemy && !p2HasEnemy)
 					return 1;
@@ -564,8 +599,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 				//Otherwise, just find the shortest total length required
 				else
 				{
-					int dist1 = dist2p1 + ai.getDistTo(p1.getLobby().getBusStop(), p1.getDestination().getBusStop());
-					int dist2 = dist2p2 + ai.getDistTo(p2.getLobby().getBusStop(), p2.getDestination().getBusStop());
+					int dist1 = dist2p1 * dist2p1 + ai.getDistTo(p1.getLobby().getBusStop(), p1.getDestination().getBusStop());
+					int dist2 = dist2p2 * dist2p2 + ai.getDistTo(p2.getLobby().getBusStop(), p2.getDestination().getBusStop());
 					return dist1 - dist2;
 				}
 			}
