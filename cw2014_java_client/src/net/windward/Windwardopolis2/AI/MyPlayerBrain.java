@@ -271,7 +271,6 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 					pickup = AllPickups(getMe(), getPassengers());
                     ptDest = pickup.get(0).getLobby().getBusStop();
 					
-					
 					/* Their code
                     java.util.List<Company> comps = getCompanies();
                     while(ptDest == null) {
@@ -525,6 +524,29 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 		{
 			public int compare(Passenger p1, Passenger p2)
 			{
+				boolean p1HasEnemy;
+				boolean p2HasEnemy;
+				
+				//If the passenger has an enemy at their destination, do not take them
+				for (Passenger enemy : p1.getEnemies())
+					if (enemy.getLobby().getBusStop().equals(p1.getDestination().getBusStop()))
+					{
+						p1HasEnemy = true;
+						break;
+					}
+				
+				for (Passenger enemy : p2.getEnemies())
+					if (enemy.getLobby().getBusStop().equals(p2.getDestination().getBusStop()))
+					{
+						p2HasEnemy = true;
+						break;
+					}
+				
+				if (p1HasEnemy && !p2HasEnemy)
+					return 1;
+				else if (p2HasEnemy && !p1HasEnemy)
+					return -1;
+				
 				//If the passenger is right here, go ahead and take them
 				int dist2p1 = CalculatePathPlus1(getMe(), p1.getLobby().getBusStop()).size();
 				int dist2p2 = CalculatePathPlus1(getMe(), p2.getLobby().getBusStop()).size();
