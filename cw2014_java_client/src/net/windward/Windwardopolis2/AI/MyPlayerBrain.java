@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * The sample C# AI. Start with this project but write your own code as this is a very simplistic implementation of the AI.
@@ -27,7 +29,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
     private static String NAME = "Стая лошадей";
 
     // bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
-    public static String SCHOOL = "Purdue";
+    public static String SCHOOL = "Purdue U.";
 
     private static Logger log = Logger.getLogger(IPlayerAI.class);
 
@@ -207,7 +209,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             sendOrders = ordersEvent;
             playCards = cardEvent;
 
-            java.util.ArrayList<Passenger> pickup = AllPickups(me, passengers);
+            java.util.ArrayList<Passenger> pickup = AllPickups(this, me, passengers);
 
             // get the path from where we are to the dest.
             java.util.ArrayList<Point> path = CalculatePathPlus1(me, pickup.get(0).getLobby().getBusStop());
@@ -255,7 +257,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 case NO_PATH:
                 case PASSENGER_NO_ACTION:
                     if (getMe().getLimo().getPassenger() == null) {
-                        pickup = AllPickups(plyrStatus, getPassengers());
+                        pickup = AllPickups(this, plyrStatus, getPassengers());
                         ptDest = pickup.get(0).getLobby().getBusStop();
                     } else {
                         ptDest = getMe().getLimo().getPassenger().getDestination().getBusStop();
@@ -263,12 +265,12 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     break;
                 case PASSENGER_DELIVERED:
                 case PASSENGER_ABANDONED:
-                    pickup = AllPickups(getMe(), getPassengers());
+                    pickup = AllPickups(this, getMe(), getPassengers());
                     ptDest = pickup.get(0).getLobby().getBusStop();
                     break;
                 case PASSENGER_REFUSED_ENEMY:
                     //Get a new list of pickups and pretend we don't have a passenger
-					pickup = AllPickups(getMe(), getPassengers());
+					pickup = AllPickups(this, getMe(), getPassengers());
                     ptDest = pickup.get(0).getLobby().getBusStop();
 					
 					/* Their code
@@ -284,7 +286,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     break;
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_PICKED_UP:
-                    pickup = AllPickups(getMe(), getPassengers());
+                    pickup = AllPickups(this, getMe(), getPassengers());
                     ptDest = getMe().getLimo().getPassenger().getDestination().getBusStop();
                     break;
 
@@ -309,7 +311,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     ptDest = cof.get(randCof).getBusStop();
                     break;
                 case COFFEE_STORE_CAR_RESTOCKED:
-                    pickup = AllPickups(getMe(), getPassengers());
+                    pickup = AllPickups(this, getMe(), getPassengers());
                     if (pickup.size() == 0)
                         break;
                     ptDest = pickup.get(0).getLobby().getBusStop();
@@ -511,7 +513,12 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         return path;
     }
 
-    private static java.util.ArrayList<Passenger> AllPickups(Player me, Iterable<Passenger> passengers) {
+    private int getDistTo(Point p1, Point p2)
+    {
+        return SimpleAStar.CalculatePath(getGameMap(), p1, p2).size();
+    }
+
+    private static java.util.ArrayList<Passenger> AllPickups(final MyPlayerBrain ai, Player me, Iterable<Passenger> passengers) {
         java.util.ArrayList<Passenger> pickup = new java.util.ArrayList<Passenger>();
 
         for (Passenger psngr : passengers) {
@@ -524,8 +531,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 		{
 			public int compare(Passenger p1, Passenger p2)
 			{
-				boolean p1HasEnemy;
-				boolean p2HasEnemy;
+				boolean p1HasEnemy = false;
+				boolean p2HasEnemy = false;
 				
 				//If the passenger has an enemy at their destination, do not take them
 				for (Passenger enemy : p1.getEnemies())
@@ -548,8 +555,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 					return -1;
 				
 				//If the passenger is right here, go ahead and take them
-				int dist2p1 = CalculatePathPlus1(getMe(), p1.getLobby().getBusStop()).size();
-				int dist2p2 = CalculatePathPlus1(getMe(), p2.getLobby().getBusStop()).size();
+				int dist2p1 = ai.getDistTo(ai.getMe().getLimo().getMapPosition(), p1.getLobby().getBusStop());
+				int dist2p2 = ai.getDistTo(ai.getMe().getLimo().getMapPosition(), p2.getLobby().getBusStop());
 				if (dist2p1 == 1 && dist2p2 != 1)
 					return -1;
 				else if (dist2p2 == 1)
@@ -557,8 +564,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 				//Otherwise, just find the shortest total length required
 				else
 				{
-					int dist1 = dist2p1 + CalculatePathPlus1(p1.getLobby().getBusStop(), p1.getDestination().getBusStop()).size();
-					int dist2 = dist2p2 + CalculatePathPlus1(p2.getLobby().getBusStop(), p1.getDestination().getBusStop()).size();
+					int dist1 = dist2p1 + ai.getDistTo(p1.getLobby().getBusStop(), p1.getDestination().getBusStop());
+					int dist2 = dist2p2 + ai.getDistTo(p2.getLobby().getBusStop(), p2.getDestination().getBusStop());
 					return dist1 - dist2;
 				}
 			}
