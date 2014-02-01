@@ -24,11 +24,10 @@ import java.util.ArrayList;
  * The sample C# AI. Start with this project but write your own code as this is a very simplistic implementation of the AI.
  */
 public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI {
-    // bugbug - put your team name here.
-    private static String NAME = "James Gosling";
+    private static String NAME = "Стая лошадей";
 
     // bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
-    public static String SCHOOL = "Windward U.";
+    public static String SCHOOL = "Purdue";
 
     private static Logger log = Logger.getLogger(IPlayerAI.class);
 
@@ -235,7 +234,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         try {
             // bugbug - we return if not us because the below code is only for when we need a new path or our limo hit a bus stop.
             // if you want to act on other players arriving at bus stops, you need to remove this. But make sure you use Me, not
-            // plyrStatus for the Player you are updatiing (particularly to determine what tile to start your path from).
+            // plyrStatus for the Player you are updating (particularly to determine what tile to start your path from).
             if (plyrStatus != getMe()) {
                 return;
             }
@@ -268,7 +267,12 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     ptDest = pickup.get(0).getLobby().getBusStop();
                     break;
                 case PASSENGER_REFUSED_ENEMY:
-                    //add in random so no refuse loop
+                    //Get a new list of pickups and pretend we don't have a passenger
+					pickup = AllPickups(getMe(), getPassengers());
+                    ptDest = pickup.get(0).getLobby().getBusStop();
+					
+					
+					/* Their code
                     java.util.List<Company> comps = getCompanies();
                     while(ptDest == null) {
                         int randCompany = rand.nextInt(comps.size());
@@ -277,6 +281,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                             break;
                         }
                     }
+					*/
                     break;
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_PICKED_UP:
@@ -292,7 +297,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_DELIVERED:
                 case PASSENGER_ABANDONED:
-                    if (getMe().getLimo().getCoffeeServings() <= 0) {
+                    if (getMe().getLimo().getCoffeeServings() <= 1) {
                         java.util.List<CoffeeStore> cof = getCoffeeStores();
                         int randCof = rand.nextInt(cof.size());
                         ptDest = cof.get(randCof).getBusStop();
@@ -516,6 +521,26 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         }
 
         //add sort by random so no loops for can't pickup
+		Collections.sort(pickup, new Comparator<Passenger>()
+		{
+			public int compare(Passenger p1, Passenger p2)
+			{
+				//If the passenger is right here, go ahead and take them
+				int dist2p1 = CalculatePathPlus1(getMe(), p1.getLobby().getBusStop()).size();
+				int dist2p2 = CalculatePathPlus1(getMe(), p2.getLobby().getBusStop()).size();
+				if (dist2p1 == 1 && dist2p2 != 1)
+					return -1;
+				else if (dist2p2 == 1)
+					return 1;
+				//Otherwise, just find the shortest total length required
+				else
+				{
+					int dist1 = dist2p1 + CalculatePathPlus1(p1.getLobby().getBusStop(), p1.getDestination().getBusStop()).size();
+					int dist2 = dist2p2 + CalculatePathPlus1(p2.getLobby().getBusStop(), p1.getDestination().getBusStop()).size();
+					return dist1 - dist2;
+				}
+			}
+		});
         return pickup;
     }
 }
