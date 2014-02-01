@@ -412,7 +412,7 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 
     private void MaybePlayPowerUp()
     {
-        // draw a card
+        // Draw cards until hand is full
         if (getPowerUpHand().size() < getMe().getMaxCardsInHand() && getPowerUpDeck().size() > 0)
         {
             for (int index = 0; index < getMe().getMaxCardsInHand() - getPowerUpHand().size() && getPowerUpDeck().size() > 0; index++)
@@ -439,6 +439,16 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if (pu2 == null)
                 return;
 
+            //Get a list of other players
+            java.util.ArrayList<Player> otherPlayers = new ArrayList<Player>();
+            for(Player play : privatePlayers)
+            {
+                if(play.getGuid() != getMe().getGuid() && play.getLimo().getPassenger() != null) {
+                    otherPlayers.add(play);
+                }
+            }
+
+            boolean shouldPlay = false;
             //Discard this crap
             if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERY_QUARTER_SPEED)
             {
@@ -460,25 +470,77 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             }
             else if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
             {
-                java.util.ArrayList<Player> plyrsWithPsngrs = new ArrayList<Player>();
-                for(Player play : privatePlayers) {
-                    if(play.getGuid() != getMe().getGuid() && play.getLimo().getPassenger() != null) {
-                        plyrsWithPsngrs.add(play);
-                    }
-                }
+                Player target = otherPlayers.get(0);
+                for (Player p : otherPlayers)
+                    if (p.getScore() > target.getScore())
+                        target = p;
 
-                if (plyrsWithPsngrs.size() == 0)
-                    return;
-                Player target = plyrsWithPsngrs.get(0);
-                for (Player p : plyrsWithPsngrs)
+                int dist = 0;
+                if (target.getLimo().getPassenger() != null)
+                    dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
+
+                if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION && dist > 3 && dist < 8)
+                {
+                    pu2.setPlayer(target);
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Ope, changed my mind!\" (Target = " + target.getName() + ")");
+                }
+                else if (pu2.getCard() == PowerUp.CARD.STOP_CAR && dist > 4)
+                {
+                    pu2.setPlayer(target);
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Broken Down\" (Target = " + target.getName() + ")");
+                }
+            }
+            else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_CARS)
+            {
+                Point current = getMe().getLimo().getMapPosition();
+                Point dest = getMe().getLimo().getPath().get(getMe().getLimo().getPath().size() - 1);
+
+                Player target = otherPlayers.get(0);
+                for (Player p : otherPlayers)
+                    if (p.getScore() > target.getScore())
+                        target = p;
+
+                int dist = 0;
+                if (target.getLimo().getPassenger() != null)
+                    dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
+
+                if (getDistTo(current, dest) > 20 || rand.nextDouble() < 0.3)
+                {
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Maybe we'll be closer\"");
+                }
+                else if (dist < 3)
+                {
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Magic Carpet-Bro\"");
+                }
+            }
+            else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERING_PASSENGER)
+            {
+                
+            }
+            else if (pu2.getCard() == PowerUp.CARD.ALL_OTHER_CARS_QUARTER_SPEED)
+            {
+                shouldPlay = true;
+                System.out.println("NOTE: Playing card.  Strategy: \"Speed limit\"");
+            }
+            else if (pu2.getCard() == PowerUp.CARD.STOP_CAR)
+            {
+                Player target = otherPlayers.get(0);
+                for (Player p : otherPlayers)
                     if (p.getScore() > target.getScore())
                         target = p;
                 pu2.setPlayer(target);
             }
 
-            playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, pu2);
-            System.out.println("NOTE: Playing card " + pu2.getName());
-            privatePowerUpHand.remove(pu2);
+            if (shouldPlay)
+            {
+                playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, pu2);
+                System.out.println("NOTE: Playing card " + pu2.getName());
+                privatePowerUpHand.remove(pu2);
+            }
         }
     }
 
@@ -512,6 +574,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             case PASSENGER_REFUSED_ENEMY:
                 msg = plyrStatus.getLimo().getPassenger().getName() + " refused to exit at " +
                         plyrStatus.getLimo().getPassenger().getDestination().getName() + " - enemy there";
+                if (!checkForEnemy())
+                    System.out.println("******************NO CLUE WHY THIS DOESN'T WORK! :)");
                 break;
             case PASSENGER_DELIVERED_AND_PICKED_UP:
                 msg = getMyPassenger().getName() + " delivered at " + getMyPassenger().getLobby().getName() + " and " +

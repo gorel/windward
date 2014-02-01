@@ -84,17 +84,17 @@
       <file leaf-file-name="MyPlayerBrain.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/MyPlayerBrain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="446" column="13" selection-start="15992" selection-end="15992" vertical-scroll-proportion="0.60126585" vertical-offset="6794" max-vertical-offset="11152">
+            <state line="521" column="16" selection-start="19361" selection-end="19361" vertical-scroll-proportion="0.6550633" vertical-offset="8035" max-vertical-offset="12240">
               <folding>
-                <element signature="e#0#25039#0" expanded="true" />
+                <element signature="e#0#27921#0" expanded="true" />
                 <element signature="imports" expanded="true" />
                 <element signature="e#7137#7148#0" expanded="true" />
-                <element signature="e#16658#16666#0" expanded="true" />
-                <element signature="e#22489#22789#0" expanded="true" />
-                <element signature="e#22778#22779#0" expanded="true" />
-                <element signature="e#23023#23034#0" expanded="true" />
-                <element signature="e#23415#25006#0" expanded="true" />
-                <element signature="e#25001#25002#0" expanded="true" />
+                <element signature="e#15865#15873#0" expanded="true" />
+                <element signature="e#25371#25671#0" expanded="true" />
+                <element signature="e#25660#25661#0" expanded="true" />
+                <element signature="e#25905#25916#0" expanded="true" />
+                <element signature="e#26297#27888#0" expanded="true" />
+                <element signature="e#27883#27884#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -349,7 +349,7 @@
     <configuration default="false" name="Framework" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="net.windward.Windwardopolis2.Framework" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="k9-00.cs.purdue.edu" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -608,15 +608,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9061">
           <folding>
-            <element signature="e#0#25039#0" expanded="true" />
+            <element signature="e#0#27921#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#7137#7148#0" expanded="true" />
-            <element signature="e#16658#16666#0" expanded="true" />
-            <element signature="e#22489#22789#0" expanded="true" />
-            <element signature="e#22778#22779#0" expanded="true" />
-            <element signature="e#23023#23034#0" expanded="true" />
-            <element signature="e#23415#25006#0" expanded="true" />
-            <element signature="e#25001#25002#0" expanded="true" />
+            <element signature="e#15865#15873#0" expanded="true" />
+            <element signature="e#25371#25671#0" expanded="true" />
+            <element signature="e#25660#25661#0" expanded="true" />
+            <element signature="e#25905#25916#0" expanded="true" />
+            <element signature="e#26297#27888#0" expanded="true" />
+            <element signature="e#27883#27884#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -648,15 +648,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="309" column="26" selection-start="11014" selection-end="11014" vertical-scroll-proportion="0.0" vertical-offset="5253" max-vertical-offset="8908">
           <folding>
-            <element signature="e#0#25039#0" expanded="true" />
+            <element signature="e#0#27921#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#7137#7148#0" expanded="true" />
-            <element signature="e#16658#16666#0" expanded="true" />
-            <element signature="e#22489#22789#0" expanded="true" />
-            <element signature="e#22778#22779#0" expanded="true" />
-            <element signature="e#23023#23034#0" expanded="true" />
-            <element signature="e#23415#25006#0" expanded="true" />
-            <element signature="e#25001#25002#0" expanded="true" />
+            <element signature="e#15865#15873#0" expanded="true" />
+            <element signature="e#25371#25671#0" expanded="true" />
+            <element signature="e#25660#25661#0" expanded="true" />
+            <element signature="e#25905#25916#0" expanded="true" />
+            <element signature="e#26297#27888#0" expanded="true" />
+            <element signature="e#27883#27884#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -759,15 +759,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="213" column="34" selection-start="7497" selection-end="7497" vertical-scroll-proportion="0.0" vertical-offset="3621" max-vertical-offset="4607">
           <folding>
-            <element signature="e#0#25039#0" expanded="true" />
+            <element signature="e#0#27921#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#7137#7148#0" expanded="true" />
-            <element signature="e#16658#16666#0" expanded="true" />
-            <element signature="e#22489#22789#0" expanded="true" />
-            <element signature="e#22778#22779#0" expanded="true" />
-            <element signature="e#23023#23034#0" expanded="true" />
-            <element signature="e#23415#25006#0" expanded="true" />
-            <element signature="e#25001#25002#0" expanded="true" />
+            <element signature="e#15865#15873#0" expanded="true" />
+            <element signature="e#25371#25671#0" expanded="true" />
+            <element signature="e#25660#25661#0" expanded="true" />
+            <element signature="e#25905#25916#0" expanded="true" />
+            <element signature="e#26297#27888#0" expanded="true" />
+            <element signature="e#27883#27884#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -910,6 +910,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="524" selection-end="524" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="986">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Passenger.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="84" column="19" selection-start="2402" selection-end="2409" vertical-scroll-proportion="-8.269231" vertical-offset="975" max-vertical-offset="4641">
@@ -922,26 +929,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/api/Company.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="13" selection-start="524" selection-end="524" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="986">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Windwardopolis2/AI/MyPlayerBrain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="446" column="13" selection-start="15992" selection-end="15992" vertical-scroll-proportion="0.60126585" vertical-offset="6794" max-vertical-offset="11152">
+        <state line="521" column="16" selection-start="19361" selection-end="19361" vertical-scroll-proportion="0.6550633" vertical-offset="8035" max-vertical-offset="12240">
           <folding>
-            <element signature="e#0#25039#0" expanded="true" />
+            <element signature="e#0#27921#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#7137#7148#0" expanded="true" />
-            <element signature="e#16658#16666#0" expanded="true" />
-            <element signature="e#22489#22789#0" expanded="true" />
-            <element signature="e#22778#22779#0" expanded="true" />
-            <element signature="e#23023#23034#0" expanded="true" />
-            <element signature="e#23415#25006#0" expanded="true" />
-            <element signature="e#25001#25002#0" expanded="true" />
+            <element signature="e#15865#15873#0" expanded="true" />
+            <element signature="e#25371#25671#0" expanded="true" />
+            <element signature="e#25660#25661#0" expanded="true" />
+            <element signature="e#25905#25916#0" expanded="true" />
+            <element signature="e#26297#27888#0" expanded="true" />
+            <element signature="e#27883#27884#0" expanded="true" />
           </folding>
         </state>
       </provider>
