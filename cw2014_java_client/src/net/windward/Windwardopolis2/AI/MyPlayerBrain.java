@@ -148,6 +148,12 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 
     private void setMyPassenger(Passenger value) { privateMyPassenger = value; }
 
+    /**
+     * My target passenger
+     */
+    private Passenger privateMyTargetPassenger;
+    public final Passenger getMyTargetPassenger() { return privateMyTargetPassenger; }
+    private void setPrivateMyTargetPassenger(Passenger value) { privateMyTargetPassenger = value; }
 
     private PlayerAIBase.PlayerOrdersEvent sendOrders;
 
@@ -241,7 +247,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 if (getMyPassenger() != null && checkForEnemy())
                 {
                     pickup = AllPickups(this, getMe(), getPassengers());
-                    ptDest = pickup.get(0).getLobby().getBusStop();
+                    privateMyTargetPassenger = pickup.get(0);
+                    ptDest = getMyTargetPassenger().getLobby().getBusStop();
                     System.out.println("Enemy detected at " + getMyPassenger().getDestination() + ".  Rerouting.");
                     DisplayOrders(ptDest);
 
@@ -272,7 +279,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     else
                     {
                         pickup = AllPickups(this, getMe(), getPassengers());
-                        ptDest = pickup.get(0).getLobby().getBusStop();
+                        privateMyTargetPassenger = pickup.get(0);
+                        ptDest = getMyTargetPassenger().getLobby().getBusStop();
                     }
                 }
                 return;
@@ -293,7 +301,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 case PASSENGER_NO_ACTION:
                     if (getMe().getLimo().getPassenger() == null) {
                         pickup = AllPickups(this, plyrStatus, getPassengers());
-                        ptDest = pickup.get(0).getLobby().getBusStop();
+                        privateMyTargetPassenger = pickup.get(0);
+                        ptDest = getMyTargetPassenger().getLobby().getBusStop();
                     } else {
                         ptDest = getMe().getLimo().getPassenger().getDestination().getBusStop();
                     }
@@ -322,7 +331,8 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_PICKED_UP:
                     pickup = AllPickups(this, getMe(), getPassengers());
-                    ptDest = getMe().getLimo().getPassenger().getDestination().getBusStop();
+                    privateMyTargetPassenger = pickup.get(0);
+                    ptDest = getMyTargetPassenger().getLobby().getBusStop();
                     break;
 
             }
@@ -519,7 +529,55 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             }
             else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERING_PASSENGER)
             {
-                
+                if (getMyTargetPassenger().equals(pu2.getPassenger()))
+                {
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Hey, you're that dude\"");
+                }
+            }
+            else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVER_AT_COMPANY)
+            {
+                if (getMyTargetPassenger().getDestination().equals(pu2.getCompany()))
+                {
+                    shouldPlay = true;
+                    System.out.println("NOTE: Playing card.  Strategy: \"I like that place\"");
+                }
+            }
+            else if (pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
+            {
+                Player target = otherPlayers.get(0);
+                for (Player p : otherPlayers)
+                    if (p.getScore() > target.getScore())
+                        target = p;
+
+                for (Passenger p : getPassengers())
+                {
+                    if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6)
+                    {
+                        shouldPlay = true;
+                        pu2.setPassenger(p);
+                        System.out.println("NOTE: Playing card.  Strategy: \"Catch me if you can\"");
+                        break;
+                    }
+                }
+            }
+            else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_PASSENGERS)
+            {
+                Player target = otherPlayers.get(0);
+                for (Player p : otherPlayers)
+                    if (p.getScore() > target.getScore())
+                        target = p;
+
+                for (Passenger p : getPassengers())
+                {
+                    if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6 && getDistTo(getMe().getLimo().getMapPosition(), getMyTargetPassenger().getLobby().getBusStop()) > 10)
+                    {
+                        shouldPlay = true;
+                        pu2.setPassenger(p);
+                        System.out.println("NOTE: Playing card.  Strategy: \"Swappeh Space\"");
+                        break;
+                    }
+                }
             }
             else if (pu2.getCard() == PowerUp.CARD.ALL_OTHER_CARS_QUARTER_SPEED)
             {
