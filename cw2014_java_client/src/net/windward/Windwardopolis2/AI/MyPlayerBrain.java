@@ -440,17 +440,6 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         int numCoffees = getMe().getLimo().getCoffeeServings();
         if (getPowerUpHand().size() != 0)
         {
-            //Can we play?
-            PowerUp pu2 = null;
-            for(PowerUp current : getPowerUpHand()) {
-                if(current.isOkToPlay()) {
-                    pu2 = current;
-                    break;
-                }
-            }
-            if (pu2 == null)
-                return;
-
             //Get a list of other players
             java.util.ArrayList<Player> otherPlayers = new ArrayList<Player>();
             for(Player play : privatePlayers)
@@ -461,137 +450,166 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             }
 
             boolean shouldPlay = false;
-            //Discard this crap
-            if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERY_QUARTER_SPEED)
+            PowerUp chosenCard = null;
+            for (PowerUp pu2 : getPowerUpHand())
             {
-                Point current = getMe().getLimo().getMapPosition();
-                Point dest = getMyPassenger().getDestination().getBusStop();
-                int dist = getDistTo(current, dest);
-                if (dist < 12 || getMyPassenger().getPointsDelivered() >= 2 && dist < 18)
-                {
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"We'll take it easy\"");
-                }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
-            {
-                Player target = otherPlayers.get(0);
-                for (Player p : otherPlayers)
-                    if (p.getScore() > target.getScore())
-                        target = p;
+                if (!pu2.isOkToPlay())
+                    continue;
 
-                int dist = 0;
-                if (target.getLimo().getPassenger() != null)
-                    dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
-
-                if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION && dist > 3 && dist < 10)
+                //Discard this crap
+                if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERY_QUARTER_SPEED)
                 {
-                    pu2.setPlayer(target);
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Ope, changed my mind!\" (Target = " + target.getName() + ")");
-                }
-                else if (pu2.getCard() == PowerUp.CARD.STOP_CAR && dist > 4)
-                {
-                    pu2.setPlayer(target);
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Broken Down\" (Target = " + target.getName() + ")");
-                }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_CARS)
-            {
-                Point current = getMe().getLimo().getMapPosition();
-                Point dest = getMe().getLimo().getPath().get(getMe().getLimo().getPath().size() - 1);
-
-                Player target = otherPlayers.get(0);
-                for (Player p : otherPlayers)
-                    if (p.getScore() > target.getScore())
-                        target = p;
-
-                int dist = 0;
-                if (target.getLimo().getPassenger() != null)
-                    dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
-
-                if (getDistTo(current, dest) > 18 || rand.nextDouble() < 0.3)
-                {
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Maybe we'll be closer\"");
-                }
-                else if (dist < 3)
-                {
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Magic Carpet-Bro\"");
-                }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERING_PASSENGER)
-            {
-                if (getMyTargetPassenger().equals(pu2.getPassenger()))
-                {
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"Hey, you're that dude\" -- CEO is " + pu2.getPassenger());
-                }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVER_AT_COMPANY)
-            {
-                if (numCoffees > 1 && getMyTargetPassenger().getDestination().equals(pu2.getCompany()))
-                {
-                    shouldPlay = true;
-                    System.out.println("NOTE: Playing card.  Strategy: \"I like that place\" -- Destination is " + pu2.getCompany().getName());
-                }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
-            {
-                Player target = otherPlayers.get(0);
-                for (Player p : otherPlayers)
-                    if (p.getScore() > target.getScore())
-                        target = p;
-
-                for (Passenger p : getPassengers())
-                {
-                    if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6)
+                    Point current = getMe().getLimo().getMapPosition();
+                    Point dest = getMyPassenger().getDestination().getBusStop();
+                    int dist = getDistTo(current, dest);
+                    if (dist < 12 || getMyPassenger().getPointsDelivered() >= 2 && dist < 18)
                     {
                         shouldPlay = true;
-                        pu2.setPassenger(p);
-                        System.out.println("NOTE: Playing card.  Strategy: \"Catch me if you can\"");
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"We'll take it easy\"");
                         break;
                     }
                 }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_PASSENGERS)
-            {
-                Player target = otherPlayers.get(0);
-                for (Player p : otherPlayers)
-                    if (p.getScore() > target.getScore())
-                        target = p;
-
-                for (Passenger p : getPassengers())
+                else if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
                 {
-                    if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6 && getDistTo(getMe().getLimo().getMapPosition(), getMyTargetPassenger().getLobby().getBusStop()) > 10)
+                    Player target = otherPlayers.get(0);
+                    for (Player p : otherPlayers)
+                        if (p.getScore() > target.getScore())
+                            target = p;
+
+                    int dist = 0;
+                    if (target.getLimo().getPassenger() != null)
+                        dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
+
+                    if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION && dist > 3 && dist < 10)
                     {
+                        pu2.setPlayer(target);
                         shouldPlay = true;
-                        pu2.setPassenger(p);
-                        System.out.println("NOTE: Playing card.  Strategy: \"Swappeh Space\"");
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"Ope, changed my mind!\" (Target = " + target.getName() + ")");
+                        break;
+                    }
+                    else if (pu2.getCard() == PowerUp.CARD.STOP_CAR && dist > 4)
+                    {
+                        pu2.setPlayer(target);
+                        shouldPlay = true;
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"Broken Down\" (Target = " + target.getName() + ")");
                         break;
                     }
                 }
-            }
-            else if (pu2.getCard() == PowerUp.CARD.ALL_OTHER_CARS_QUARTER_SPEED)
-            {
-                shouldPlay = true;
-                System.out.println("NOTE: Playing card.  Strategy: \"Speed limit\"");
-            }
-            else if (pu2.getCard() == PowerUp.CARD.STOP_CAR)
-            {
-                Player target = otherPlayers.get(0);
-                for (Player p : otherPlayers)
-                    if (p.getScore() > target.getScore())
-                        target = p;
-                pu2.setPlayer(target);
+                else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_CARS)
+                {
+                    Point current = getMe().getLimo().getMapPosition();
+                    Point dest = getMe().getLimo().getPath().get(getMe().getLimo().getPath().size() - 1);
+
+                    Player target = otherPlayers.get(0);
+                    for (Player p : otherPlayers)
+                        if (p.getScore() > target.getScore())
+                            target = p;
+
+                    int dist = 0;
+                    if (target.getLimo().getPassenger() != null)
+                        dist = getDistTo(target.getLimo().getPassenger().getDestination().getBusStop(), target.getLimo().getMapPosition());
+
+                    if (getDistTo(current, dest) > 18 || rand.nextDouble() < 0.3)
+                    {
+                        shouldPlay = true;
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"Maybe we'll be closer\"");
+                        break;
+                    }
+                    else if (dist < 3)
+                    {
+                        shouldPlay = true;
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"Magic Carpet-Bro\"");
+                        break;
+                    }
+                }
+                else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERING_PASSENGER)
+                {
+                    if (getMyTargetPassenger().equals(pu2.getPassenger()))
+                    {
+                        shouldPlay = true;
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"Hey, you're that dude\" -- CEO is " + pu2.getPassenger());
+                        break;
+                    }
+                }
+                else if (pu2.getCard() == PowerUp.CARD.MULT_DELIVER_AT_COMPANY)
+                {
+                    if (numCoffees > 1 && getMyTargetPassenger().getDestination().equals(pu2.getCompany()))
+                    {
+                        shouldPlay = true;
+                        chosenCard = pu2;
+                        System.out.println("NOTE: Playing card.  Strategy: \"I like that place\" -- Destination is " + pu2.getCompany().getName());
+                        break;
+                    }
+                }
+                else if (pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
+                {
+                    Player target = otherPlayers.get(0);
+                    for (Player p : otherPlayers)
+                        if (p.getScore() > target.getScore())
+                            target = p;
+
+                    for (Passenger p : getPassengers())
+                    {
+                        if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6)
+                        {
+                            shouldPlay = true;
+                            chosenCard = pu2;
+                            pu2.setPassenger(p);
+                            System.out.println("NOTE: Playing card.  Strategy: \"Catch me if you can\"");
+                            break;
+                        }
+                        if (shouldPlay)
+                            break;
+                    }
+                }
+                else if (pu2.getCard() == PowerUp.CARD.RELOCATE_ALL_PASSENGERS)
+                {
+                    Player target = otherPlayers.get(0);
+                    for (Player p : otherPlayers)
+                        if (p.getScore() > target.getScore())
+                            target = p;
+
+                    for (Passenger p : getPassengers())
+                    {
+                        if (p.getLobby() != null && getDistTo(target.getLimo().getMapPosition(), p.getLobby().getBusStop()) < 6 && getDistTo(getMe().getLimo().getMapPosition(), getMyTargetPassenger().getLobby().getBusStop()) > 10)
+                        {
+                            shouldPlay = true;
+                            chosenCard = pu2;
+                            pu2.setPassenger(p);
+                            System.out.println("NOTE: Playing card.  Strategy: \"Swappeh Space\"");
+                            break;
+                        }
+                        if (shouldPlay)
+                            break;
+                    }
+                }
+                else if (pu2.getCard() == PowerUp.CARD.ALL_OTHER_CARS_QUARTER_SPEED)
+                {
+                    shouldPlay = true;
+                    chosenCard = pu2;
+                    System.out.println("NOTE: Playing card.  Strategy: \"Speed limit\"");
+                    break;
+                }
+                else if (pu2.getCard() == PowerUp.CARD.STOP_CAR)
+                {
+                    Player target = otherPlayers.get(0);
+                    for (Player p : otherPlayers)
+                        if (p.getScore() > target.getScore())
+                            target = p;
+                    pu2.setPlayer(target);
+                }
             }
 
             if (shouldPlay)
             {
-                playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, pu2);
-                privatePowerUpHand.remove(pu2);
+                playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, chosenCard);
+                privatePowerUpHand.remove(chosenCard);
             }
         }
     }
