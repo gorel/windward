@@ -1,7 +1,7 @@
 package net.windward.Windwardopolis2;
 
 //----------------------------------------------------------------------------------------
-//	Copyright � 2007 - 2013 Tangible Software Solutions Inc.
+//	Copyright 2007 - 2013 Tangible Software Solutions Inc.
 //	This class can be used by anyone provided that the copyright notice remains intact.
 //
 //	This class is used to simulate some .NET string functions in Java.
