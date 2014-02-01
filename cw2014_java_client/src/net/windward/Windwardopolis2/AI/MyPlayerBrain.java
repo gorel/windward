@@ -423,7 +423,6 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 privatePowerUpHand.add(pu);
                 playCards.invoke(PlayerAIBase.CARD_ACTION.DRAW, pu);
             }
-            return;
         }
 
         int numCoffees = getMe().getLimo().getCoffeeServings();
@@ -440,9 +439,13 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if (pu2 == null)
                 return;
 
-
-
-            if (getMe().getLimo().getCoffeeServings() > 1 && pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
+            //Discard this crap
+            if (pu2.getCard() == PowerUp.CARD.MULT_DELIVERY_QUARTER_SPEED)
+            {
+                playCards.invoke(PlayerAIBase.CARD_ACTION.DISCARD, pu2);
+                privatePowerUpHand.remove(pu2);
+            }
+            else if (numCoffees > 1 && pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
             {
                 Passenger toUseCardOn = null;
                 for(Passenger pass : privatePassengers)
@@ -588,9 +591,12 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 
     private boolean checkForEnemy()
     {
-        for (Passenger enemy : getMyPassenger().getEnemies())
-            if (enemy.getLobby() != null && enemy.getLobby().getBusStop().equals(getMyPassenger().getDestination()))
+        for (Passenger p : getMyPassenger().getDestination().getPassengers())
+            if (getMyPassenger().getEnemies().contains(p))
+            {
+                System.out.println("***ENEMY DETECTED***");
                 return true;
+            }
         return false;
     }
 
