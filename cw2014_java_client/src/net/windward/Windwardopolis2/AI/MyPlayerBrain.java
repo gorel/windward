@@ -232,12 +232,48 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 
         try
         {
+            Point ptDest = null;
+            java.util.ArrayList<Passenger> pickup = new java.util.ArrayList<Passenger>();
+
             if (plyrStatus != getMe())
             {
                 //If there is an enemy at our destination, abandon this passenger
-                if (checkForEnemy())
+                if (getMyPassenger() != null && checkForEnemy())
                 {
-                    
+                    pickup = AllPickups(this, getMe(), getPassengers());
+                    ptDest = pickup.get(0).getLobby().getBusStop();
+                    System.out.println("Enemy detected at " + getMyPassenger().getDestination() + ".  Rerouting.");
+                    DisplayOrders(ptDest);
+
+                    // get the path from where we are to the dest.
+                    java.util.ArrayList<Point> path = CalculatePathPlus1(getMe(), ptDest);
+
+                    // update our saved Player to match new settings
+                    if (path.size() > 0) {
+                        getMe().getLimo().getPath().clear();
+                        getMe().getLimo().getPath().addAll(path);
+                    }
+                    if (pickup.size() > 0) {
+                        getMe().getPickUp().clear();
+                        getMe().getPickUp().addAll(pickup);
+                    }
+
+                    sendOrders.invoke("move", path, pickup);
+                }
+
+                //Check once again for closest passenger
+                if (getMyPassenger() == null)
+                {
+                    //If we're out of coffee, go get coffee from the nearest store
+                    if (getMe().getLimo().getCoffeeServings() < 1)
+                    {
+                        ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
+                    }
+                    else
+                    {
+                        pickup = AllPickups(this, getMe(), getPassengers());
+                        ptDest = pickup.get(0).getLobby().getBusStop();
+                    }
                 }
                 return;
             }
@@ -252,8 +288,6 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if(log.isDebugEnabled())
                 log.info("gameStatus( " + status + " )");
 
-            Point ptDest = null;
-            java.util.ArrayList<Passenger> pickup = new java.util.ArrayList<Passenger>();
             switch (status) {
                 case NO_PATH:
                 case PASSENGER_NO_ACTION:
@@ -292,24 +326,21 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     break;
 
             }
-            /* I don' think we need this probably...
+
             // coffee store override
             switch (status)
             {
                 case PASSENGER_DELIVERED_AND_PICKED_UP:
                 case PASSENGER_DELIVERED:
                 case PASSENGER_ABANDONED:
-                    if (getMe().getLimo().getCoffeeServings() <= 1) {
-                        java.util.List<CoffeeStore> cof = getCoffeeStores();
-                        int randCof = rand.nextInt(cof.size());
-                        ptDest = cof.get(randCof).getBusStop();
-                    }
-                    break;
                 case PASSENGER_REFUSED_NO_COFFEE:
                 case PASSENGER_DELIVERED_AND_PICK_UP_REFUSED:
-                    java.util.List<CoffeeStore> cof = getCoffeeStores();
-                    int randCof = rand.nextInt(cof.size());
-                    ptDest = cof.get(randCof).getBusStop();
+                    //If we're out of coffee and don't have a passenger, go get coffee from the nearest store
+                    if (getMe().getLimo().getCoffeeServings() < 1 && getMyPassenger() == null)
+                    {
+                        ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
+                        System.out.println("Setting location to a coffee place");
+                    }
                     break;
                 case COFFEE_STORE_CAR_RESTOCKED:
                     pickup = AllPickups(this, getMe(), getPassengers());
@@ -318,10 +349,9 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                     ptDest = pickup.get(0).getLobby().getBusStop();
                     break;
             }
-            */
 
             //If we're out of coffee and don't have a passenger, go get coffee from the nearest store
-            if (getMe().getLimo().getCoffeeServings() < 1 && getMyPassenger() == null)
+            if (getMe().getLimo().getCoffeeServings() < 1)
             {
                 ptDest = GetCoffeeQueue(this, getCoffeeStores()).get(0).getBusStop();
                 System.out.println("Setting location to a coffee place");
@@ -331,10 +361,33 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             if(ptDest == null)
                 return;
 
-            DisplayOrders(ptDest);
-
             // get the path from where we are to the dest.
             java.util.ArrayList<Point> path = CalculatePathPlus1(getMe(), ptDest);
+
+            //If we have no passenger and a coffee store is on the way to the next passenger (or close), go get coffee
+            if (getMyPassenger() == null && getMe().getLimo().getCoffeeServings() != 3)
+            {
+                boolean found = false;
+                for (CoffeeStore cs : GetCoffeeQueue(this, getCoffeeStores()))
+                {
+                    Point loc = cs.getBusStop();
+                    for (Point p : path)
+                    {
+                        //If a coffee shop is within 4 units of our desired path, go there first
+                        if (getDistTo(loc, p) < 4)
+                        {
+                            ptDest = cs.getBusStop();
+                            path = CalculatePathPlus1(getMe(), ptDest);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found)
+                        break;
+                }
+            }
+
+            DisplayOrders(ptDest);
 
             if (log.isDebugEnabled())
             {
@@ -357,10 +410,9 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
         }
     }
 
-    private void MaybePlayPowerUp() {
-        if ((getPowerUpHand().size() != 0) && (rand.nextInt(50) < 30))
-            return;
-        // not enough, draw
+    private void MaybePlayPowerUp()
+    {
+        // draw a card
         if (getPowerUpHand().size() < getMe().getMaxCardsInHand() && getPowerUpDeck().size() > 0)
         {
             for (int index = 0; index < getMe().getMaxCardsInHand() - getPowerUpHand().size() && getPowerUpDeck().size() > 0; index++)
@@ -374,33 +426,36 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
             return;
         }
 
-        // can we play one?
-        PowerUp pu2 = null;
-        for(PowerUp current : getPowerUpHand()) {
-            if(current.isOkToPlay()) {
-                pu2 = current;
-                break;
-            }
-        }
-
-        if (pu2 == null)
-            return;
-        // 10% discard, 90% play
-        if (rand.nextInt(10) == 0)
-            playCards.invoke(PlayerAIBase.CARD_ACTION.DISCARD, pu2);
-        else
+        int numCoffees = getMe().getLimo().getCoffeeServings();
+        if (getPowerUpHand().size() != 0)
         {
-            if (pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER) {
+            //Can we play?
+            PowerUp pu2 = null;
+            for(PowerUp current : getPowerUpHand()) {
+                if(current.isOkToPlay()) {
+                    pu2 = current;
+                    break;
+                }
+            }
+            if (pu2 == null)
+                return;
+
+
+
+            if (getMe().getLimo().getCoffeeServings() > 1 && pu2.getCard() == PowerUp.CARD.MOVE_PASSENGER)
+            {
                 Passenger toUseCardOn = null;
-                for(Passenger pass : privatePassengers) {
-                    if(pass.getCar() == null) {
+                for(Passenger pass : privatePassengers)
+                {
+                    if(pass.getCar() == null)
+                    {
                         toUseCardOn = pass;
                         break;
                     }
                 }
                 pu2.setPassenger(toUseCardOn);
             }
-            if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
+            else if (pu2.getCard() == PowerUp.CARD.CHANGE_DESTINATION || pu2.getCard() == PowerUp.CARD.STOP_CAR)
             {
                 java.util.ArrayList<Player> plyrsWithPsngrs = new ArrayList<Player>();
                 for(Player play : privatePlayers) {
@@ -411,13 +466,17 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
 
                 if (plyrsWithPsngrs.size() == 0)
                     return;
-                pu2.setPlayer(plyrsWithPsngrs.get(0));
+                Player target = plyrsWithPsngrs.get(0);
+                for (Player p : plyrsWithPsngrs)
+                    if (p.getScore() > target.getScore())
+                        target = p;
+                pu2.setPlayer(target);
             }
-            if (log.isInfoEnabled())
-                log.info("Request play card " + pu2);
+
             playCards.invoke(PlayerAIBase.CARD_ACTION.PLAY, pu2);
+            System.out.println("NOTE: Playing card " + pu2.getName());
+            privatePowerUpHand.remove(pu2);
         }
-        privatePowerUpHand.remove(pu2);
     }
 
     /**
@@ -453,11 +512,11 @@ public class MyPlayerBrain implements net.windward.Windwardopolis2.AI.IPlayerAI 
                 break;
             case PASSENGER_DELIVERED_AND_PICKED_UP:
                 msg = getMyPassenger().getName() + " delivered at " + getMyPassenger().getLobby().getName() + " and " +
-                        plyrStatus.getLimo().getPassenger().getName() + " picked up";
+                        plyrStatus.getLimo().getPassenger().getName() + " picked up (Destination: " + plyrStatus.getLimo().getPassenger().getDestination() + ")";
                 privateMyPassenger = plyrStatus.getLimo().getPassenger();
                 break;
             case PASSENGER_PICKED_UP:
-                msg = plyrStatus.getLimo().getPassenger().getName() + " picked up";
+                msg = plyrStatus.getLimo().getPassenger().getName() + " picked up (Destination: " + plyrStatus.getLimo().getPassenger().getDestination() + ")";
                 privateMyPassenger = plyrStatus.getLimo().getPassenger();
                 break;
             case PASSENGER_REFUSED_NO_COFFEE:
